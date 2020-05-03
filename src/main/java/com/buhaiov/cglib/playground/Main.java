@@ -14,21 +14,23 @@ public class Main {
         enhancer.setSuperclass(PersonService.class);
         enhancer.setCallback(new WrapAroundInterceptor());
 
-        PersonService proxy = (PersonService) enhancer.create();
-        proxy.sayHello("John");
+        PersonService cglibProxy = (PersonService) enhancer.create();
+        cglibProxy.sayHello("John");
+        System.out.println(cglibProxy.getClass());
 
 
-        System.out.println("=".repeat(20));
+        System.out.println("\n"  + "=".repeat(20) + "\n");
 
 
         var target = new PersonService();
-        Service proxy2 = (Service) Proxy.newProxyInstance(
+        Service jdkProxy = (Service) Proxy.newProxyInstance(
                 Main.class.getClassLoader(),
                 new Class<?>[]{Service.class},
                 new WrapAroundHandler(target)
         );
 
-        proxy2.sayHello("Johnny");
+        jdkProxy.sayHello("Johnny");
+        System.out.println(jdkProxy.getClass());
     }
 
     static class WrapAroundInterceptor implements MethodInterceptor {
