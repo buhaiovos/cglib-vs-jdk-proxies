@@ -10,15 +10,16 @@ import java.lang.reflect.Proxy;
 
 public class Main {
     public static void main(String[] args) {
-        Enhancer enhancer = new Enhancer();
+        var enhancer = new Enhancer();
         enhancer.setSuperclass(PersonService.class);
         enhancer.setCallback(new WrapAroundInterceptor());
 
         PersonService proxy = (PersonService) enhancer.create();
-
         proxy.sayHello("John");
 
+
         System.out.println("=".repeat(20));
+
 
         var target = new PersonService();
         Service proxy2 = (Service) Proxy.newProxyInstance(
@@ -33,9 +34,9 @@ public class Main {
     static class WrapAroundInterceptor implements MethodInterceptor {
         @Override
         public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-            System.out.println("Opening Transaction");
+            System.out.println("CGLIB Opening Transaction");
             Object callResult = methodProxy.invokeSuper(o, objects);
-            System.out.println("Closing Transaction");
+            System.out.println("CGLIB Closing Transaction");
             return callResult;
         }
     }
